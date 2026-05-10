@@ -1,3 +1,7 @@
+# Mostly procedural helpers — not centered on a single class. Still interacts with your OOP
+# design: it inspects live objects (sprite Groups, screen) and records type names + common
+# attributes (position, velocity, …), assuming a consistent interface across your sprites.
+
 import inspect
 import json
 import math
@@ -53,6 +57,7 @@ def log_state():
                 if i >= _SPRITE_SAMPLE_LIMIT:
                     break
 
+                # Duck typing + class name: each sprite is some subclass of your hierarchy.
                 sprite_info = {"type": sprite.__class__.__name__}
 
                 if hasattr(sprite, "position"):

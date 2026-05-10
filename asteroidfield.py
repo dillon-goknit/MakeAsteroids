@@ -3,7 +3,10 @@ import random
 from asteroid import Asteroid
 from constants import *
 
+# AsteroidField IS-A pygame.sprite.Sprite but is not a CircleShape: its job is to own
+# spawning logic (different responsibility = different class, same update-driven pattern).
 class AsteroidField(pygame.sprite.Sprite):
+    # Class attribute shared by all instances (here only one field exists — edge definitions).
     edges = [
         [
             pygame.Vector2(1, 0),
@@ -32,6 +35,7 @@ class AsteroidField(pygame.sprite.Sprite):
         self.spawn_timer = 0.0
 
     def spawn(self, radius, position, velocity):
+        # Factory-style: creates Asteroid instances; they register via Asteroid.containers.
         asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity
 

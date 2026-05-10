@@ -1,3 +1,6 @@
+# Module-level constants: not a class, but supports OOP by keeping "magic numbers" out of
+# class bodies. Game classes stay focused on behavior; tuning values live in one place.
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 PLAYER_RADIUS = 20
