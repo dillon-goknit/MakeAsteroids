@@ -1,16 +1,21 @@
+from typing import ClassVar
+
 import pygame
 
 # CircleShape: base class (generalization) for anything that is a circle on screen.
 # Subclasses (Player, Asteroid, Shot) inherit shared state/behavior and override the parts
 # that differ — classic inheritance + polymorphism.
 class CircleShape(pygame.sprite.Sprite):
+    # Set on each subclass in main.py before constructing instances (pygame idiom).
+    containers: ClassVar[tuple[pygame.sprite.AbstractGroup, ...] | None] = None
+
     def __init__(self, x, y, radius):
-        # pygame.sprite.Sprite expects optional *groups at construction. We pass
-        # self.containers when subclasses set class attribute `containers` before
-        # instances are created (see main.py). That wires each new object into the
-        # right sprite Groups automatically — composition with pygame's group system.
-        if hasattr(self, "containers"):
-            super().__init__(self.containers)
+        # pygame.sprite.Sprite takes *groups. `containers` is set on the subclass in
+        # main.py before instances are built; we unpack it here so each Group is its own
+        # argument (matches typings and pygame’s API).
+        groups = type(self).containers
+        if groups is not None:
+            super().__init__(*groups)
         else:
             super().__init__()
 

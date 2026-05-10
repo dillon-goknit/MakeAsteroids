@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import pygame
 import random
 from asteroid import Asteroid
@@ -6,6 +8,8 @@ from constants import *
 # AsteroidField IS-A pygame.sprite.Sprite but is not a CircleShape: its job is to own
 # spawning logic (different responsibility = different class, same update-driven pattern).
 class AsteroidField(pygame.sprite.Sprite):
+    # Assigned in main.py before AsteroidField() (same containers pattern as CircleShape).
+    containers: ClassVar[tuple[pygame.sprite.AbstractGroup, ...] | None] = None
     # Class attribute shared by all instances (here only one field exists — edge definitions).
     edges = [
         [
@@ -31,7 +35,11 @@ class AsteroidField(pygame.sprite.Sprite):
     ]
 
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self, self.containers)
+        groups = type(self).containers
+        if groups is not None:
+            pygame.sprite.Sprite.__init__(self, *groups)
+        else:
+            pygame.sprite.Sprite.__init__(self)
         self.spawn_timer = 0.0
 
     def spawn(self, radius, position, velocity):
